@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.covidvaccination.R;
 import com.example.covidvaccination.adapter.VaccinationInfoAdapter;
 import com.example.covidvaccination.model.VaccineModel;
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 try {
                     JSONObject object = new JSONObject(response);
                     JSONArray sessonArray = object.getJSONArray("sessions");
-                    for(int i=0;i<sessonArray.length();i++){
+                    for (int i = 0; i < sessonArray.length(); i++) {
                         JSONObject sesObject = sessonArray.getJSONObject(i);
                         VaccineModel vaccineModel = new VaccineModel();
                         vaccineModel.setVaccineCenter(sesObject.getString("name"));
@@ -114,17 +118,24 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                         vaccineModel.setVaccinationAge(sesObject.getString("min_age_limit"));
                         vaccineModel.setVaccineAvailable(sesObject.getString("availble_capacity"));
                     }
-                    VaccinationInfoAdapter vaccinationInfoAdapter =VaccinationInfoAdapter(getApplicationContext(),vaccination_centers);
+                    VaccinationInfoAdapter vaccinationInfoAdapter = new VaccinationInfoAdapter(getApplicationContext(), vaccination_centers);
                     resultRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     resultRecyclerView.setAdapter(vaccinationInfoAdapter);
                     holdOnProgress.setVisibility(View.INVISIBLE);
-                }
-                catch  (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                holdOnProgress.setVisibility(View.INVISIBLE);
+                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
+            }
         });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 }
