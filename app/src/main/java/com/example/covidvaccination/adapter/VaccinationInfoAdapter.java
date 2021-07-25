@@ -1,5 +1,6 @@
 package com.example.covidvaccination.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,11 @@ import java.util.List;
 public class VaccinationInfoAdapter extends RecyclerView.Adapter<VaccinationInfoAdapter.ViewHolder> {
     private LayoutInflater layoutInflater;
     private List<VaccineModel> list_vaccine_center;
+
+    public VaccinationInfoAdapter(Context mcontext, List<VaccineModel>list_vaccine_center){
+        this.layoutInflater=LayoutInflater.from(mcontext);
+        this.list_vaccine_center=list_vaccine_center;
+    }
 
 
     @NonNull

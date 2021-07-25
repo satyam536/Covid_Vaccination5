@@ -1,5 +1,6 @@
 package com.example.covidvaccination.view;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -23,6 +24,6 @@ public class PickDate extends DialogFragment {
 
 
 
-        return super.onCreateDialog(savedInstanceState);
+        return new DatePickerDialog(getActivity(),(DatePickerDialog.OnDateSetListener)getActivity(),year,month,day);
     }
 }
